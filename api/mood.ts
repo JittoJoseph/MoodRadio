@@ -10,13 +10,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 	const { image } = req.body
 	const apiKey = process.env.GEMINI_API_KEY
 
+	if (!apiKey) {
+		return res.status(500).json({ error: 'GEMINI_API_KEY is not set' })
+	}
+
 	try {
-		// Replace with actual API call to Google Gemini API
-		const moodAnalysis = {
-			mood: 'happy',
-			confidence: 0.95,
-			timestamp: Date.now(),
-		}
+		// Replace with the actual API endpoint and request parameters
+		const response = await axios.post(
+			'https://gemini.googleapis.com/v1beta/mood:analyze',
+			{ image },
+			{
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${apiKey}`,
+				},
+			}
+		)
+
+		const moodAnalysis = response.data
 		res.status(200).json(moodAnalysis)
 	} catch (error) {
 		console.error('Mood detection failed', error)

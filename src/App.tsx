@@ -8,6 +8,7 @@ import AudioVisualizer from './components/AudioVisualizer'
 const App: React.FC = () => {
 	const [capturedImage, setCapturedImage] = useState<string | null>(null)
 	const [mood, setMood] = useState<string | null>(null)
+	const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null)
 
 	return (
 		<div className="container mx-auto p-4">
@@ -15,8 +16,13 @@ const App: React.FC = () => {
 			{capturedImage && !mood && (
 				<MoodAnalyzer image={capturedImage} onMoodDetected={setMood} />
 			)}
-			{mood && <MusicPlayer mood={mood} />}
-			<AudioVisualizer />
+			{mood && (
+				<MusicPlayer
+					mood={mood}
+					onAudioElementReady={setAudioElement}
+				/>
+			)}
+			<AudioVisualizer audioElement={audioElement} />
 		</div>
 	)
 }

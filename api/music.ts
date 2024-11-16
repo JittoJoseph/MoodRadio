@@ -8,7 +8,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 	}
 
 	const moodId = req.query.moodId as string
-	const apiKey = process.env.YOUTUBE_API_KEY
+	const apiKey = process.env.YOUTUBE_API_KEY as string
+
+	if (!apiKey) {
+		return res.status(500).json({ error: 'YOUTUBE_API_KEY is not set' })
+	}
 
 	try {
 		const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {

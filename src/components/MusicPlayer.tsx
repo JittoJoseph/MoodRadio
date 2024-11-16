@@ -1,8 +1,8 @@
 // src/components/MusicPlayer.tsx
-import React from 'react'
+import React, { useEffect } from 'react'
 import { getPlaylist } from '../services/youtubeService'
 
-const MusicPlayer: React.FC<{ mood: string }> = ({ mood }) => {
+const MusicPlayer: React.FC<{ mood: string; onAudioElementReady: (audio: HTMLAudioElement) => void }> = ({ mood, onAudioElementReady }) => {
 	const [playlist, setPlaylist] = React.useState<any[]>([])
 
 	React.useEffect(() => {
@@ -12,6 +12,14 @@ const MusicPlayer: React.FC<{ mood: string }> = ({ mood }) => {
 		}
 		fetchPlaylist()
 	}, [mood])
+
+	useEffect(() => {
+		if (playlist.length > 0) {
+			const audio = new Audio(playlist[0].url)
+			audio.play()
+			onAudioElementReady(audio)
+		}
+	}, [playlist, onAudioElementReady])
 
 	return (
 		<div>
