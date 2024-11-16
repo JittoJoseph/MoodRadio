@@ -1,6 +1,7 @@
 // server.js
-const express = require('express')
-const cors = require('cors')
+import express from 'express'
+import cors from 'cors'
+
 const app = express()
 const port = 3001
 
@@ -15,7 +16,6 @@ app.post('/api/mood', (req, res) => {
 })
 
 app.get('/api/music', (req, res) => {
-	// Mock playlist
 	const mockSongs = [
 		{ id: '1', title: 'Happy Song', artist: 'Artist 1', url: 'https://www.youtube.com/watch?v=1' },
 		{ id: '2', title: 'Sad Song', artist: 'Artist 2', url: 'https://www.youtube.com/watch?v=2' },
