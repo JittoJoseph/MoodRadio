@@ -1,3 +1,4 @@
+// tailwind.config.cjs
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	content: [
@@ -5,7 +6,12 @@ module.exports = {
 		"./src/**/*.{js,ts,jsx,tsx}",
 	],
 	theme: {
-		extend: {},
+		extend: {
+			colors: {
+				primary: 'rgb(var(--primary))',
+				accent: 'rgb(var(--accent))'
+			}
+		},
 	},
 	plugins: [],
 }

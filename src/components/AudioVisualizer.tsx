@@ -26,6 +26,8 @@ interface VisualizerMeshProps {
 const VisualizerMesh: React.FC<VisualizerMeshProps> = ({ audioElement }) => {
 	const meshRef = useRef<THREE.Mesh>(null)
 	const analyserRef = useRef<AnalyserNode | null>(null)
+	const bars = 32 // Number of bars
+	const barRefs = useRef<THREE.Mesh[]>([])
 
 	useEffect(() => {
 		if (audioElement) {
@@ -53,11 +55,34 @@ const VisualizerMesh: React.FC<VisualizerMeshProps> = ({ audioElement }) => {
 		}
 	})
 
+	useFrame(() => {
+		if (analyserRef.current) {
+			const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
+			analyserRef.current.getByteFrequencyData(dataArray)
+
+			// Update each bar
+			barRefs.current.forEach((bar, i) => {
+				const value = dataArray[i * 2] / 255
+				bar.scale.y = Math.max(0.1, value * 3)
+			})
+		}
+	})
+
 	return (
-		<mesh ref={meshRef}>
-			<boxGeometry args={[1, 1, 1]} />
-			<meshStandardMaterial color="#61dafb" />
-		</mesh>
+		<group>
+			{Array.from({ length: bars }).map((_, i) => (
+				<mesh
+					key={i}
+					ref={(el) => {
+						if (el) barRefs.current[i] = el
+					}}
+					position={[i - bars / 2, 0, 0]}
+				>
+					<boxGeometry args={[0.5, 1, 0.5]} />
+					<meshStandardMaterial color={`hsl(${(i * 360 / bars)}, 100%, 50%)`} />
+				</mesh>
+			))}
+		</group>
 	)
 }
 
